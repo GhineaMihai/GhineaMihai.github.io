@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamification</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .circle {
+            width: 20px;
+            height: 20px;
+            margin: 0 5px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            display: inline-block;
+            background-color: transparent;
+        }
+        .circle.filled {
+            background-color: #28a745;
+        }
+        .circle.golden {
+            background-color: gold;
+        }
+        .definitions {
+            display: block;
+        }
+        .definitions.hidden .tab-content {
+            display: none;
+        }
+        .definitions.hidden::before {
+            content: "Complete the puzzle to view the definitions";
+            display: block;
+            text-align: center;
+            padding: 1em;
+            font-weight: bold;
+        }
+        .puzzle {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 5px;
+            justify-content: center;
+        }
+        .puzzle-piece {
+            width: 100px;
+            height: 100px;
+            background-color: lightgray;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 1px solid #000;
+            cursor: pointer;
+        }
+        /* Sticky navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Styling for the new gamification examples section */
+        .gamification-example img {
+            width: 150px;
+            height: 150px;
+            margin-left: 20px;
+            border-radius: 8px;
+        }
+        .gamification-example {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .real-world-examples {
+            margin-top: 30px;
+        }
+
+        /* Background for each carousel item */
+        .carousel-item {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            color: #333;
+        }
+
+        .carousel-item h4 {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .carousel-item img {
+            width: 600px;
+            height: 600px;
+            border-radius: 20px;
+        }
+
+        .carousel-item p {
+            font-size: 1rem;
+        }
+
+        /* Style for the next button */
+        .next-button {
+            position: fixed;
+            right: 20px;
+            bottom: 50%;
+            transform: translateY(50%);
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .next-button:hover {
+            background-color: #218838;
+            color: #fff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Gamification</a>
+            <div id="progress-counter" class="d-flex">
+                <span class="circle" id="circle-1"></span>
+                <span class="circle" id="circle-2"></span>
+                <span class="circle" id="circle-3"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="text-center mb-4">
+            <h1>Gamification</h1>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 definitions hidden" id="definitions">
+                <div class="card">
+                    <div class="card-body">
+                        <ul class="nav nav-tabs" id="definitionTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="game-tab" data-bs-toggle="tab" data-bs-target="#game" type="button" role="tab" aria-controls="game" aria-selected="true">Game</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="gamification-tab" data-bs-toggle="tab" data-bs-target="#gamification" type="button" role="tab" aria-controls="gamification" aria-selected="false">Gamification</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="definitionTabsContent">
+                            <div class="tab-pane fade show active p-3" id="game" role="tabpanel" aria-labelledby="game-tab">
+                                <h5>Definition of Game</h5>
+                                <p>A game is a structured form of play, often undertaken for entertainment or fun, and sometimes used as an educational tool. Games typically have rules, objectives, and elements of competition or cooperation.</p>
+                            </div>
+                            <div class="tab-pane fade p-3" id="gamification" role="tabpanel" aria-labelledby="gamification-tab">
+                                <h5>Definition of Gamification</h5>
+                                <p>Gamification is the application of game-design elements and principles in non-game contexts to engage, motivate, and influence behavior, often by using points, badges, and leaderboards.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="puzzle" id="puzzle">
+                    <div class="puzzle-piece" data-id="1">1</div>
+                    <div class="puzzle-piece" data-id="2">2</div>
+                    <div class="puzzle-piece" data-id="3">3</div>
+                    <div class="puzzle-piece" data-id="4">4</div>
+                    <div class="puzzle-piece" data-id="5">5</div>
+                    <div class="puzzle-piece" data-id="6">6</div>
+                    <div class="puzzle-piece" data-id="7">7</div>
+                    <div class="puzzle-piece" data-id="8">8</div>
+                    <div class="puzzle-piece" data-id=""></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gamification Examples Section -->
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <ul class="nav nav-tabs" id="gamificationExamplesTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="reward-tab" data-bs-toggle="tab" data-bs-target="#reward" type="button" role="tab" aria-controls="reward" aria-selected="true">Rewards</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="badges-tab" data-bs-toggle="tab" data-bs-target="#badges" type="button" role="tab" aria-controls="badges" aria-selected="false">Badges</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="leaderboard-tab" data-bs-toggle="tab" data-bs-target="#leaderboard" type="button" role="tab" aria-controls="leaderboard" aria-selected="false">Leaderboard</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="gamificationExamplesTabsContent">
+                            <div class="tab-pane fade show active p-3" id="reward" role="tabpanel" aria-labelledby="reward-tab">
+                                <div class="gamification-example">
+                                    <div>
+                                        <h5>Rewards in Gamification</h5>
+                                        <p>Rewards systems can encourage users to complete tasks. For example, offering points after completing a specific activity in a game.</p>
+                                    </div>
+                                    <img src="Rewards.png" alt="Rewards">
+                                </div>
+                            </div>
+                            <div class="tab-pane fade p-3" id="badges" role="tabpanel" aria-labelledby="badges-tab">
+                                <div class="gamification-example">
+                                    <div>
+                                        <h5>Badges in Gamification</h5>
+                                        <p>Badges are visual representations of accomplishments, often used in educational tools to motivate users to achieve certain goals.</p>
+                                    </div>
+                                    <img src="Badges.png" alt="Badges">
+                                </div>
+                            </div>
+                            <div class="tab-pane fade p-3" id="leaderboard" role="tabpanel" aria-labelledby="leaderboard-tab">
+                                <div class="gamification-example">
+                                    <div>
+                                        <h5>Leaderboard in Gamification</h5>
+                                        <p>Leaderboards track the achievements of users and display their rankings, motivating them to improve their performance.</p>
+                                    </div>
+                                    <img src="Leaderboard.png" alt="Leaderboard">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="real-world-examples">
+            <h3>Real World Examples of Gamification</h3>
+            <div id="realWorldExamplesCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="text-content">
+                            <h4>Fitness Apps</h4>
+                            <p>Many fitness apps, like Fitbit and Strava, use gamification elements such as badges, challenges, and leaderboards to encourage users to stay active.</p>
+                        </div>
+                        <img src="Fitbit.png" alt="Fitness Apps">
+                        <img src="Strava.png" alt="Strava">
+                    </div>
+                    <div class="carousel-item">
+                        <div class="text-content">
+                            <h4>Educational Platforms</h4>
+                            <p>Educational tools like Duolingo and Khan Academy use gamified systems, such as progress bars and rewards, to motivate students to continue learning and progressing.</p>
+                        </div>
+                        <img src="Khan Academy.png" alt="Khan Academy">
+                        <img src="Duolingo.png" alt="Duolingo">
+                    </div>
+                    <div class="carousel-item">
+                        <div class="text-content">
+                            <h4>Employee Engagement</h4>
+                            <p>Companies often use gamification for employee engagement, offering points and rewards for completing tasks or achieving goals, as seen in platforms like Bunchball or Hoopla.</p>
+                        </div>
+                        <img src="Hoopla.png" alt="Hoopla">
+                        <img src="Bunchball.png" alt="Bunchball">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#realWorldExamplesCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#realWorldExamplesCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Next button -->
+    <a href="Wordle.html" class="next-button" onclick="saveCircleStates()">Next</a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const puzzleContainer = document.getElementById('puzzle');
+        const definitions = document.getElementById('definitions');
+        const circle1 = document.getElementById('circle-1');
+	const circle2 = document.getElementById('circle-2');
+	const circle3 = document.getElementById('circle-3');
+
+        const circleStates = JSON.parse(localStorage.getItem('circleStates')) || {};
+        if (circleStates['circle-1']) circle1.classList.add(circleStates['circle-1']);
+        if (circleStates['circle-2']) circle2.classList.add(circleStates['circle-2']);
+        if (circleStates['circle-3']) circle3.classList.add(circleStates['circle-3']);
+
+	// Save the current state of the circles to localStorage
+	function saveCircleStates() {
+    	const circleStates = {
+        	'circle-1': circle1.classList.contains('golden') ? 'golden' : '',
+	        'circle-2': circle2.classList.contains('golden') ? 'golden' : '',
+	        'circle-3': circle3.classList.contains('golden') ? 'golden' : ''
+	    };
+	    localStorage.setItem('circleStates', JSON.stringify(circleStates));
+	}
+
+	// Observe changes to the circles' class lists
+	function observeCircle(circle) {
+	    const observer = new MutationObserver(() => saveCircleStates());
+	    observer.observe(circle, { attributes: true, attributeFilter: ['class'] });
+	}
+
+	// Attach observers to each circle
+	observeCircle(circle1);
+	observeCircle(circle2);
+	observeCircle(circle3);
+
+        function shufflePuzzle() {
+            const pieces = Array.from(puzzleContainer.children);
+            for (let i = pieces.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                puzzleContainer.appendChild(pieces[j]);
+            }
+        }
+
+        function solvePuzzle() {
+            const pieces = Array.from(puzzleContainer.children);
+            const correctOrder = ['1', '2', '3', '4', '5', '6', '7', '8', ''];
+
+            for (let i = 0; i < pieces.length; i++) {
+                pieces[i].setAttribute('data-id', correctOrder[i]);
+                pieces[i].textContent = correctOrder[i] ? correctOrder[i] : '';
+            }
+
+            // Check if puzzle is completed
+            const isCompleted = Array.from(puzzleContainer.children).every((piece, index) => {
+                return piece.getAttribute('data-id') == index + 1 || piece.getAttribute('data-id') === '';
+            });
+
+            if (isCompleted) {
+                circle1.classList.add('golden');
+                definitions.classList.remove('hidden');
+            }
+        }
+
+        puzzleContainer.addEventListener('click', function(e) {
+            if (e.target.classList.contains('puzzle-piece')) {
+                const emptyPiece = document.querySelector('.puzzle-piece[data-id=""]');
+                const clickedPiece = e.target;
+
+                const emptyIndex = Array.from(puzzleContainer.children).indexOf(emptyPiece);
+                const clickedIndex = Array.from(puzzleContainer.children).indexOf(clickedPiece);
+
+                const validMoves = [
+                    emptyIndex - 1, emptyIndex + 1, 
+                    emptyIndex - 3, emptyIndex + 3
+                ];
+
+                if (validMoves.includes(clickedIndex)) {
+                    emptyPiece.textContent = clickedPiece.textContent;
+                    emptyPiece.setAttribute('data-id', clickedPiece.getAttribute('data-id'));
+                    clickedPiece.textContent = '';
+                    clickedPiece.setAttribute('data-id', '');
+                }
+
+                const isCompleted = Array.from(puzzleContainer.children).every((piece, index) => {
+                    return piece.getAttribute('data-id') == index + 1 || piece.getAttribute('data-id') === '';
+                });
+
+                if (isCompleted) {
+                    circle1.classList.add('golden');
+                    definitions.classList.remove('hidden');
+                    saveCircleStates();
+                }
+            }
+        });
+
+        saveCircleStates();
+
+        // Shuffle the puzzle initially
+        shufflePuzzle();
+
+        // Add keydown event listener for "v" + "b"
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'v') {
+                window.addEventListener('keydown', function(e) {
+                    if (e.key === 'b') {
+                        solvePuzzle(); // Solve the puzzle when both "v" and "b" are pressed
+                        saveCircleStates();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

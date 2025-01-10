@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .circle {
+            width: 20px;
+            height: 20px;
+            margin: 0 5px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            display: inline-block;
+            background-color: transparent;
+        }
+        .circle.filled {
+            background-color: #28a745;
+        }
+        .circle.golden {
+            background-color: gold;
+        }
+
+        .wordle-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            grid-gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .wordle-cell {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            line-height: 50px;
+            font-weight: bold;
+            font-size: 20px;
+            border: 2px solid #ccc;
+            text-transform: uppercase;
+        }
+
+        .wordle-cell.correct {
+            background-color: #28a745; /* Green */
+            color: white;
+        }
+
+        .wordle-cell.present {
+            background-color: #ffc107; /* Yellow */
+            color: white;
+        }
+
+        .wordle-cell.absent {
+            background-color: #6c757d; /* Gray */
+            color: white;
+        }
+
+        /* Style for the next button */
+        .previous-button {
+            position: fixed;
+            left: 20px;
+            bottom: 50%;
+            transform: translateY(50%);
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .previous-button:hover {
+            background-color: #218838;
+            color: #fff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Wordle</a>
+            <div id="progress-counter" class="d-flex">
+                <span class="circle" id="circle-1"></span>
+                <span class="circle" id="circle-2"></span>
+                <span class="circle" id="circle-3"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="text-center">
+            <h1>Welcome to Wordle</h1>
+            <p>Guess the 5-letter word!</p>
+        </div>
+
+        <div class="wordle-grid" id="wordle-grid">
+            <!-- Wordle grid cells will be dynamically added -->
+        </div>
+
+        <div class="text-center mt-4">
+            <input type="text" id="guess-input" maxlength="5" class="form-control w-50 d-inline-block" placeholder="Enter your guess">
+            <button id="submit-guess" class="btn btn-primary">Submit</button>
+        </div>
+        <p class="text-center mt-2" id="feedback"></p>
+    </div>
+
+    <!-- Previous button -->
+    <a href="Index.html" class="previous-button" onclick="saveCircleStates()">Previous</a>
+
+    <script>
+        // Word pool
+        const wordPool = ["apple", "grape", "peach", "melon", "berry", "lemon", "mango", "plums"];
+        const secretWord = wordPool[Math.floor(Math.random() * wordPool.length)]; // Random word from the pool
+        const maxGuesses = 6;
+        let currentGuessIndex = 0;
+
+        // Initialize progress counter
+        const circle1 = document.getElementById('circle-1');
+        const circle2 = document.getElementById('circle-2');
+        const circle3 = document.getElementById('circle-3');
+
+        const circleStates = JSON.parse(localStorage.getItem('circleStates')) || {};
+        if (circleStates['circle-1']) circle1.classList.add(circleStates['circle-1']);
+        if (circleStates['circle-2']) circle2.classList.add(circleStates['circle-2']);
+        if (circleStates['circle-3']) circle3.classList.add(circleStates['circle-3']);
+
+        // Initialize Wordle grid
+        const wordleGrid = document.getElementById('wordle-grid');
+        const feedback = document.getElementById('feedback');
+        const guessInput = document.getElementById('guess-input');
+        const submitGuess = document.getElementById('submit-guess');
+        const previousButton = document.getElementById('previous-button');  // Reference to the Previous button
+
+        // Save the current state of the circles to localStorage
+        function saveCircleStates() {
+            const circleStates = {
+                'circle-1': circle1.classList.contains('golden') ? 'golden' : '',
+                'circle-2': circle2.classList.contains('golden') ? 'golden' : '',
+                'circle-3': circle3.classList.contains('golden') ? 'golden' : ''
+            };
+            localStorage.setItem('circleStates', JSON.stringify(circleStates));
+        }
+
+        function initializeGrid() {
+            for (let i = 0; i < maxGuesses; i++) {
+                for (let j = 0; j < 5; j++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('wordle-cell');
+                    cell.setAttribute('data-row', i);
+                    cell.setAttribute('data-col', j);
+                    wordleGrid.appendChild(cell);
+                }
+            }
+        }
+
+        // Check user's guess
+        function checkGuess(guess) {
+            const result = [];
+            const secretWordArray = secretWord.split('');
+            const guessArray = guess.split('');
+
+            // First pass: Check for correct letters
+            for (let i = 0; i < guessArray.length; i++) {
+                if (guessArray[i] === secretWordArray[i]) {
+                    result.push('correct');
+                    secretWordArray[i] = null; // Mark letter as used
+                } else {
+                    result.push(null);
+                }
+            }
+
+            // Second pass: Check for present letters
+            for (let i = 0; i < guessArray.length; i++) {
+                if (result[i] !== 'correct' && secretWordArray.includes(guessArray[i])) {
+                    result[i] = 'present';
+                    secretWordArray[secretWordArray.indexOf(guessArray[i])] = null; // Mark letter as used
+                } else if (result[i] !== 'correct') {
+                    result[i] = 'absent';
+                }
+            }
+
+            return result;
+        }
+
+        // Update grid with guess
+        function updateGrid(guess, result) {
+            const cells = document.querySelectorAll(`[data-row="${currentGuessIndex}"]`);
+            for (let i = 0; i < guess.length; i++) {
+                cells[i].textContent = guess[i];
+                cells[i].classList.add(result[i]);
+            }
+        }
+
+        // Handle guess submission
+        submitGuess.addEventListener('click', () => {
+            const guess = guessInput.value.toLowerCase();
+            if (guess.length !== 5) {
+                feedback.textContent = "Guess must be a 5-letter word!";
+                return;
+            }
+
+            const result = checkGuess(guess);
+            updateGrid(guess, result);
+
+            if (guess === secretWord) {
+                feedback.textContent = "Congratulations! You guessed the word!";
+                circle2.classList.add('golden');
+                saveCircleStates();  // Save state after correct guess
+            } else if (currentGuessIndex === maxGuesses - 1) {
+                feedback.textContent = `Game over! The word was "${secretWord}".`;
+            } else {
+                feedback.textContent = "Try again!";
+            }
+
+            currentGuessIndex++;
+            guessInput.value = '';
+        });
+
+        // Initialize game
+        initializeGrid();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
