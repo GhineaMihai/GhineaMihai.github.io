@@ -52,7 +52,7 @@
 <body>
     <div class="container">
         <div class="center-content">
-            <img src="Trophy.png" alt="Trophy" class="trophy-img" onclick="window.location.href='https://www.youtube.com/watch?v=YOUR_VIDEO_URL';">
+            <img src="Trophy.png" alt="Trophy" class="trophy-img" onclick="window.location.href='https://www.youtube.com/watch?v=YAgJ9XugGBo';">
             <div>
                 <button class="go-back-button" onclick="resetAndRedirect();">Go Back and Reset</button>
             </div>
@@ -60,17 +60,6 @@
     </div>
 
     <script>
-        // Function to reset circle states and redirect
-        function resetAndRedirect() {
-            // Reset circle states
-            localStorage.setItem('circle-1', '');
-            localStorage.setItem('circle-2', '');
-            localStorage.setItem('circle-3', '');
-
-            // Redirect to the specified page
-            window.location.href = 'https://ghineamihai.github.io/';
-        }
-
         // Initialize progress counter
         const circle1 = document.getElementById('circle-1');
         const circle2 = document.getElementById('circle-2');
@@ -83,6 +72,17 @@
         if (circleStates['circle-1']) circle1.classList.add(circleStates['circle-1']);
         if (circleStates['circle-2']) circle2.classList.add(circleStates['circle-2']);
         if (circleStates['circle-3']) circle3.classList.add(circleStates['circle-3']);
+
+        // Function to reset circle states and redirect
+        function resetAndRedirect() {
+            // Reset circle states
+            circle1.classList.add('');
+            circle2.classList.add('');
+            circle3.classList.add('');
+
+            // Redirect to the specified page
+            window.location.href = 'https://ghineamihai.github.io/';
+        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
