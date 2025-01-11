@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamify - Finish</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .center-content {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        /* Responsive style for the trophy image */
+        .trophy-img {
+            width: 50%; /* Set the width to 50% of its container */
+            max-width: 300px; /* Maximum width for large screens */
+            height: auto; /* Maintain aspect ratio */
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        /* Style for the "Go Back and Reset" button */
+        .go-back-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .go-back-button:hover {
+            background-color: #218838;
+        }
+
+        /* Optional: Make button more responsive */
+        @media (max-width: 576px) {
+            .go-back-button {
+                font-size: 1rem; /* Adjust font size for smaller screens */
+                padding: 8px 16px;
+            }
+
+            .trophy-img {
+                width: 70%; /* On small screens, reduce the width to 70% */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="center-content">
+            <img src="Trophy.png" alt="Trophy" class="trophy-img" onclick="window.location.href='https://www.youtube.com/watch?v=YOUR_VIDEO_URL';">
+            <div>
+                <button class="go-back-button" onclick="resetAndRedirect();">Go Back and Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to reset circle states and redirect
+        function resetAndRedirect() {
+            // Reset circle states
+            localStorage.setItem('circle-1', '');
+            localStorage.setItem('circle-2', '');
+            localStorage.setItem('circle-3', '');
+
+            // Redirect to the specified page
+            window.location.href = 'https://ghineamihai.github.io/';
+        }
+
+        // Initialize progress counter
+        const circle1 = document.getElementById('circle-1');
+        const circle2 = document.getElementById('circle-2');
+        const circle3 = document.getElementById('circle-3');
+
+        // Retrieve circle states from localStorage
+        const circleStates = JSON.parse(localStorage.getItem('circleStates')) || {};
+
+        // Apply saved states to circles
+        if (circleStates['circle-1']) circle1.classList.add(circleStates['circle-1']);
+        if (circleStates['circle-2']) circle2.classList.add(circleStates['circle-2']);
+        if (circleStates['circle-3']) circle3.classList.add(circleStates['circle-3']);
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
