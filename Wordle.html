@@ -78,6 +78,29 @@
             color: #fff;
             text-decoration: none;
         }
+
+        /* Style for the next button */
+        .next-button {
+            position: fixed;
+            right: 20px;
+            bottom: 50%;
+            transform: translateY(50%);
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .next-button:hover {
+            background-color: #218838;
+            color: #fff;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -111,6 +134,9 @@
 
     <!-- Previous button -->
     <a href="https://ghineamihai.github.io/" class="previous-button" onclick="saveCircleStates()">Previous</a>
+
+    <!-- Next button -->
+    <a href="Wordle.html" class="next-button" onclick="saveCircleStates()">Next</a>
 
     <script>
         // Word pool
