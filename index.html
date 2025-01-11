@@ -97,40 +97,32 @@
         .carousel-item p {
             font-size: 1rem;
         }
-
-        /* Style for the next button */
-        .next-button {
-            position: fixed;
-            right: 20px;
-            bottom: 50%;
-            transform: translateY(50%);
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-align: center;
-            text-decoration: none;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        .next-button:hover {
-            background-color: #218838;
-            color: #fff;
-            text-decoration: none;
-        }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Gamification</a>
-            <div id="progress-counter" class="d-flex">
+            <div class="d-flex">
                 <span class="circle" id="circle-1"></span>
                 <span class="circle" id="circle-2"></span>
                 <span class="circle" id="circle-3"></span>
             </div>
+            <!-- Navbar with Tabs -->
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link active" onclick="saveCircleStates()" href="https://ghineamihai.github.io/" target="_blank">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="saveCircleStates()" href="Wordle.html">Wordle</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="saveCircleStates()" href="Gamify.html">Gamify</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="saveCircleStates()" id="finishTab" href="Finish.html" style="display: none;">Finish</a>
+                </li>
+            </ul>
         </div>
     </nav>
 
@@ -271,42 +263,38 @@
         </div>
     </div>
 
-    <!-- Next button -->
-    <a href="Wordle.html" class="next-button" onclick="saveCircleStates()">Next</a>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const puzzleContainer = document.getElementById('puzzle');
-        const definitions = document.getElementById('definitions');
         const circle1 = document.getElementById('circle-1');
-	const circle2 = document.getElementById('circle-2');
-	const circle3 = document.getElementById('circle-3');
-
+        const circle2 = document.getElementById('circle-2');
+        const circle3 = document.getElementById('circle-3');
+        const finishTab = document.getElementById('finishTab');
+        const definitions = document.getElementById('definitions');
         const circleStates = JSON.parse(localStorage.getItem('circleStates')) || {};
+
         if (circleStates['circle-1']) circle1.classList.add(circleStates['circle-1']);
         if (circleStates['circle-2']) circle2.classList.add(circleStates['circle-2']);
         if (circleStates['circle-3']) circle3.classList.add(circleStates['circle-3']);
 
-	// Save the current state of the circles to localStorage
-	function saveCircleStates() {
-    	const circleStates = {
-        	'circle-1': circle1.classList.contains('golden') ? 'golden' : '',
-	        'circle-2': circle2.classList.contains('golden') ? 'golden' : '',
-	        'circle-3': circle3.classList.contains('golden') ? 'golden' : ''
-	    };
-	    localStorage.setItem('circleStates', JSON.stringify(circleStates));
-	}
+        // Observe changes to the circles' class lists
+        function saveCircleStates() {
+            const circleStates = {
+                'circle-1': circle1.classList.contains('golden') ? 'golden' : '',
+                'circle-2': circle2.classList.contains('golden') ? 'golden' : '',
+                'circle-3': circle3.classList.contains('golden') ? 'golden' : ''
+            };
+            localStorage.setItem('circleStates', JSON.stringify(circleStates));
+        }
 
-	// Observe changes to the circles' class lists
-	function observeCircle(circle) {
-	    const observer = new MutationObserver(() => saveCircleStates());
-	    observer.observe(circle, { attributes: true, attributeFilter: ['class'] });
-	}
+        function observeCircle(circle) {
+            const observer = new MutationObserver(() => saveCircleStates());
+            observer.observe(circle, { attributes: true, attributeFilter: ['class'] });
+        }
 
-	// Attach observers to each circle
-	observeCircle(circle1);
-	observeCircle(circle2);
-	observeCircle(circle3);
+        observeCircle(circle1);
+        observeCircle(circle2);
+        observeCircle(circle3);
 
         function shufflePuzzle() {
             const pieces = Array.from(puzzleContainer.children);
@@ -334,6 +322,12 @@
                 circle1.classList.add('golden');
                 definitions.classList.remove('hidden');
             }
+        }
+
+        function checkAllCirclesGolden() {
+            return circle1.classList.contains('golden') && 
+                   circle2.classList.contains('golden') && 
+                   circle3.classList.contains('golden');
         }
 
         puzzleContainer.addEventListener('click', function(e) {
@@ -384,6 +378,16 @@
                 });
             }
         });
+
+        // Continuously check if all circles are golden and show the Finish tab if true
+        window.onload = function() {
+            setInterval(function() {
+                if (checkAllCirclesGolden()) {
+                    finishTab.style.display = 'block'; // Show the Finish tab
+                }
+            }, 1000); // Check every 1000 milliseconds (1 second)
+        };
+
     </script>
 </body>
 </html>
