@@ -76,9 +76,12 @@
         // Function to reset circle states and redirect
         function resetAndRedirect() {
             // Reset circle states
-            circle1.classList.add('');
-            circle2.classList.add('');
-            circle3.classList.add('');
+            const circleStates = {
+                'circle-1': '',
+                'circle-2': '',
+                'circle-3': ''
+            };
+            localStorage.setItem('circleStates', JSON.stringify(circleStates));
 
             // Redirect to the specified page
             window.location.href = 'https://ghineamihai.github.io/';
