@@ -24,8 +24,9 @@
 
         .wordle-grid {
             display: grid;
-            grid-template-columns: repeat(5, 50px);
-            grid-gap: 10px;
+            grid-template-columns: repeat(5, minmax(0, 50px));
+            grid-template-rows: repeat(5, minmax(0, 50px));
+            grid-gap: 5px;
             justify-content: center;
             margin-top: 20px;
         }
