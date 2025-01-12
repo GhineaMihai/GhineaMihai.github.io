@@ -16,13 +16,12 @@
                 <span class="circle" id="circle-2"></span>
                 <span class="circle" id="circle-3"></span>
             </div>
-            <!-- Navbar with Tabs -->
             <ul class="nav nav-pills">
                 <li class="nav-item">
                     <a class="nav-link" onclick="saveCircleStates()" href="https://ghineamihai.github.io/" target="_blank">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link  active" onclick="saveCircleStates()" href="Wordle.html">Wordle</a>
+                    <a class="nav-link active" onclick="saveCircleStates()" href="Wordle.html">Wordle</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" onclick="saveCircleStates()" href="Gamify.html">Gamify</a>
@@ -50,17 +49,47 @@
             <button id="submit-guess" class="btn btn-primary">Submit</button>
         </div>
         <p class="text-center mt-2" id="feedback"></p>
+
+        <!-- Gamification Section -->
+        <div class="mt-5">
+            <h2>What Gamification Means to Me</h2>
+            <p>Gamification is about making tasks easier, more fun, and engaging. By turning challenges into games, we can transform mundane activities into exciting opportunities to learn, grow, and succeed.</p>
+        </div>
+
+        <!-- Famous Perspectives on Gamification -->
+        <div class="mt-5">
+            <h2>Famous Perspectives on Gamification</h2>
+            <div class="gamification-quotes">
+                <div class="quote-card">
+                    <img src="Jane.png" alt="Jane McGonigal" class="quote-image">
+                    <div class="quote-text">
+                        <p>"Gamification isn’t about turning routine activities into games; it’s about making those activities meaningful and rewarding." - Jane McGonigal</p>
+                    </div>
+                </div>
+                <div class="quote-card">
+                    <img src="Yu-Kai.png" alt="Yu-kai Chou" class="quote-image">
+                    <div class="quote-text">
+                        <p>"Gamification is about transforming systems into ones that engage people on an emotional level." - Yu-kai Chou</p>
+                    </div>
+                </div>
+                <div class="quote-card">
+                    <img src="Sebastian.png" alt="Sebastian Deterding" class="quote-image">
+                    <div class="quote-text">
+                        <p>"Good gamification is about understanding what motivates people, not just slapping points and badges onto tasks." - Sebastian Deterding</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Word pool
+        // Existing JavaScript code for Wordle
         const wordPool = ["apple", "grape", "peach", "melon", "berry", "lemon", "mango", "plums"];
-        const secretWord = wordPool[Math.floor(Math.random() * wordPool.length)]; // Random word from the pool
+        const secretWord = wordPool[Math.floor(Math.random() * wordPool.length)];
         const finishTab = document.getElementById('finishTab');
         const maxGuesses = 6;
         let currentGuessIndex = 0;
 
-        // Initialize progress counter
         const circle1 = document.getElementById('circle-1');
         const circle2 = document.getElementById('circle-2');
         const circle3 = document.getElementById('circle-3');
@@ -70,12 +99,10 @@
         if (circleStates['circle-2']) circle2.classList.add(circleStates['circle-2']);
         if (circleStates['circle-3']) circle3.classList.add(circleStates['circle-3']);
 
-        // Initialize Wordle grid
         const wordleGrid = document.getElementById('wordle-grid');
         const feedback = document.getElementById('feedback');
         const guessInput = document.getElementById('guess-input');
         const submitGuess = document.getElementById('submit-guess');
-        const previousButton = document.getElementById('previous-button');  // Reference to the Previous button
 
         function checkAllCirclesGolden() {
             return circle1.classList.contains('golden') && 
@@ -83,7 +110,6 @@
                    circle3.classList.contains('golden');
         }
 
-        // Save the current state of the circles to localStorage
         function saveCircleStates() {
             const circleStates = {
                 'circle-1': circle1.classList.contains('golden') ? 'golden' : '',
@@ -105,27 +131,24 @@
             }
         }
 
-        // Check user's guess
         function checkGuess(guess) {
             const result = [];
             const secretWordArray = secretWord.split('');
             const guessArray = guess.split('');
 
-            // First pass: Check for correct letters
             for (let i = 0; i < guessArray.length; i++) {
                 if (guessArray[i] === secretWordArray[i]) {
                     result.push('correct');
-                    secretWordArray[i] = null; // Mark letter as used
+                    secretWordArray[i] = null;
                 } else {
                     result.push(null);
                 }
             }
 
-            // Second pass: Check for present letters
             for (let i = 0; i < guessArray.length; i++) {
                 if (result[i] !== 'correct' && secretWordArray.includes(guessArray[i])) {
                     result[i] = 'present';
-                    secretWordArray[secretWordArray.indexOf(guessArray[i])] = null; // Mark letter as used
+                    secretWordArray[secretWordArray.indexOf(guessArray[i])] = null;
                 } else if (result[i] !== 'correct') {
                     result[i] = 'absent';
                 }
@@ -134,7 +157,6 @@
             return result;
         }
 
-        // Update grid with guess
         function updateGrid(guess, result) {
             const cells = document.querySelectorAll(`[data-row="${currentGuessIndex}"]`);
             for (let i = 0; i < guess.length; i++) {
@@ -143,7 +165,6 @@
             }
         }
 
-        // Handle guess submission
         submitGuess.addEventListener('click', () => {
             const guess = guessInput.value.toLowerCase();
             if (guess.length !== 5) {
@@ -157,7 +178,7 @@
             if (guess === secretWord) {
                 feedback.textContent = "Congratulations! You guessed the word!";
                 circle2.classList.add('golden');
-                saveCircleStates();  // Save state after correct guess
+                saveCircleStates();
             } else if (currentGuessIndex === maxGuesses - 1) {
                 feedback.textContent = `Game over! The word was "${secretWord}".`;
             } else {
@@ -168,16 +189,14 @@
             guessInput.value = '';
         });
 
-        // Initialize game
         initializeGrid();
 
-        // Continuously check if all circles are golden and show the Finish tab if true
         window.onload = function() {
             setInterval(function() {
                 if (checkAllCirclesGolden()) {
-                    finishTab.style.display = 'block'; // Show the Finish tab
+                    finishTab.style.display = 'block';
                 }
-            }, 1000); // Check every 1000 milliseconds (1 second)
+            }, 1000);
         };
 
     </script>

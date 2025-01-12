@@ -56,3 +56,7 @@
             pointer-events: none;
             opacity: 0.5;
         }
+
+body {
+    background: #9BB6E4 /* A gradient background */
+}
