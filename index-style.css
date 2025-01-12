@@ -60,6 +60,10 @@
             z-index: 1000;
         }
 
+.visually-hidden {
+  color: #113D50;
+}
+
 .nav-link {
   color: #BDD6FE;
 }
@@ -96,10 +100,10 @@
 
         /* Background for carousel items */
         .carousel-item {
-            background-color: #424242;
+            background-color: #f0f0f0;
             padding: 20px;
             border-radius: 10px;
-            color: #FFFFFF;
+            color: #333;
         }
 
         .carousel-item h4 {
