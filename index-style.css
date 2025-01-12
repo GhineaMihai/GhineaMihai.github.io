@@ -91,10 +91,10 @@
 
         /* Background for carousel items */
         .carousel-item {
-            background-color: #f0f0f0;
+            background-color: #424242;
             padding: 20px;
             border-radius: 10px;
-            color: #333;
+            color: #FFFFFF;
         }
 
         .carousel-item h4 {
