@@ -1,0 +1,54 @@
+.circle {
+            width: 20px;
+            height: 20px;
+            margin: 0 5px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            display: inline-block;
+            background-color: transparent;
+        }
+        .circle.filled {
+            background-color: #28a745;
+        }
+        .circle.golden {
+            background-color: gold;
+        }
+        .problem-box {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .interaction-area {
+            margin-top: 20px;
+        }
+
+        .option-button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .option-button:hover {
+            background-color: #0056b3;
+        }
+
+        .warning {
+            color: red;
+            font-weight: bold;
+        }
+
+        /* Disable button styling */
+        .disabled {
+            pointer-events: none;
+            opacity: 0.5;
+        }
